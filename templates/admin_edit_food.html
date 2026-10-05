@@ -1,0 +1,248 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Edit {{ food["name"] }}
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">MENU MANAGEMENT</p>
+            <h1>Edit Food</h1>
+            <p>Update this menu item's information.</p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_foods') }}"
+            class="secondary-button"
+        >
+            ← Back to Menu
+        </a>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="form-error-box">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="admin-form"
+    >
+        <input 
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}"
+        >
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+                <h2>Food Information</h2>
+                <p>Update the details for this menu item.</p>
+            </div>
+
+
+            <div class="form-card-content">
+
+                <div class="form-field">
+
+                    <label for="name">
+                        Food Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ food['name'] }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category_id"
+                        required
+                    >
+
+                        {% for category in categories %}
+
+                            <option
+                                value="{{ category['id'] }}"
+                                {% if category['id'] == food['category_id'] %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ category["name"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                    >{{ food["description"] or "" }}</textarea>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="price">
+                        Price
+                    </label>
+
+                    <div class="price-input">
+
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            min="0"
+                            value="{{ food['price'] }}"
+                            required
+                        >
+
+                        <span>MMK</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+
+                <h2>Food Image</h2>
+
+                <p>
+                    Upload a new image if you want to replace the current one.
+                </p>
+
+            </div>
+
+
+            <div class="form-card-content">
+
+                {% if food["image"] %}
+
+                    <div class="current-image">
+
+                        <p class="current-image-label">
+                            Current Image
+                        </p>
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + food['image']
+                            ) }}"
+                            alt="{{ food['name'] }}"
+                            class="edit-food-image"
+                        >
+
+                    </div>
+
+                {% else %}
+
+                    <div class="current-image-placeholder">
+                        No image currently uploaded.
+                    </div>
+
+                {% endif %}
+
+
+                <div class="image-upload-area">
+
+                    <label
+                        for="image"
+                        class="image-upload-label"
+                    >
+
+                        <span class="upload-icon">
+                            ↑
+                        </span>
+
+                        <strong>
+                            Choose a new image
+                        </strong>
+
+                        <span>
+                            JPG, PNG, JPEG, or WebP · Maximum 5 MB
+                        </span>
+
+                    </label>
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="form-actions">
+
+            <a
+                href="{{ url_for('admin_foods') }}"
+                class="secondary-button"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

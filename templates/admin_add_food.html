@@ -1,0 +1,220 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Food
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">MENU MANAGEMENT</p>
+            <h1>Add Food</h1>
+            <p>Add a new item to your restaurant menu.</p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_foods') }}"
+            class="secondary-button"
+        >
+            ← Back to Menu
+        </a>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="form-error-box">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="admin-form"
+    >
+        
+        <input 
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}"
+        >
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+                <h2>Food Information</h2>
+                <p>Enter the basic details for this menu item.</p>
+            </div>
+
+
+            <div class="form-card-content">
+
+                <div class="form-field">
+
+                    <label for="name">
+                        Food Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="e.g. Chicken Fried Rice"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category_id"
+                        required
+                    >
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                        {% for category in categories %}
+
+                            <option
+                                value="{{ category['id'] }}"
+                            >
+                                {{ category["name"] }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe the food..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="price">
+                        Price
+                    </label>
+
+                    <div class="price-input">
+
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            min="0"
+                            placeholder="3000"
+                            required
+                        >
+
+                        <span>MMK</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+
+                <h2>Food Image</h2>
+
+                <p>
+                    Upload a JPG, PNG, JPEG, or WebP image.
+                </p>
+
+            </div>
+
+
+            <div class="form-card-content">
+
+                <div class="image-upload-area">
+
+                    <label for="image" class="image-upload-label">
+
+                        <span class="upload-icon">
+                            ↑
+                        </span>
+
+                        <strong>
+                            Choose an image
+                        </strong>
+
+                        <span>
+                            Maximum size: 5 MB
+                        </span>
+
+                    </label>
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="form-actions">
+
+            <a
+                href="{{ url_for('admin_foods') }}"
+                class="secondary-button"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Add Food
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

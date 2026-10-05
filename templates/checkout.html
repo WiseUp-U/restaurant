@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Checkout
+{% endblock %}
+
+{% block body %}
+
+<div class="checkout-page">
+
+    <div class="page-heading">
+        <p class="eyebrow">ALMOST THERE</p>
+        <h1>Checkout</h1>
+        <p>Enter your delivery information to continue.</p>
+    </div>
+
+
+    <div class="checkout-layout">
+
+        <form
+            action="{{ url_for('checkout') }}"
+            method="POST"
+            class="checkout-form"
+        >
+
+            <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+            >
+
+
+            <section class="checkout-section">
+
+                <h2>Delivery Information</h2>
+
+                <div class="form-field">
+                    <label for="name">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="customer_name"
+                        placeholder="Your name"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-field">
+                    <label for="phone">
+                        Phone
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="09xxxxxxxxx"
+                        autocomplete="tel"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-field">
+                    <label for="address">
+                        Delivery Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        placeholder="Enter your delivery address"
+                        autocomplete="street-address"
+                        required
+                    ></textarea>
+                </div>
+
+            </section>
+
+
+            <section class="checkout-section">
+
+                <h2>Your Items</h2>
+
+                <div class="checkout-items">
+
+                    {% for food in foods %}
+
+                        <div class="checkout-item">
+
+                            <div>
+                                <strong>
+                                    {{ food["name"] }}
+                                </strong>
+
+                                <span>
+                                    × {{ cart[food["id"]|string] }}
+                                </span>
+                            </div>
+
+                            <span>
+                                {{ food["price"] *
+                                   cart[food["id"]|string] }}
+                                MMK
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <button
+                type="submit"
+                class="button checkout-submit"
+            >
+                Continue to Payment
+            </button>
+
+        </form>
+
+
+        <aside class="checkout-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>{{ subtotal }} MMK</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery</span>
+                <span>{{ delivery_fee }} MMK</span>
+            </div>
+
+            <hr>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <span>{{ total }} MMK</span>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

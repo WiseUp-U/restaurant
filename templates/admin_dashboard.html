@@ -1,0 +1,314 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">ADMIN</p>
+
+            <h1>Dashboard</h1>
+
+            <p>
+                Welcome back, {{ session["admin_username"] }}.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_logout') }}"
+            class="secondary-button"
+        >
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="dashboard-stats">
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Total Orders
+            </span>
+
+            <strong class="stat-number">
+                {{ total_orders }}
+            </strong>
+
+            <span class="stat-description">
+                All orders
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Active Orders
+            </span>
+
+            <strong class="stat-number">
+                {{ active_orders }}
+            </strong>
+
+            <span class="stat-description">
+                Currently processing
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Today's Sales
+            </span>
+
+            <strong class="stat-number">
+                {{ today_sales }} MMK
+            </strong>
+
+            <span class="stat-description">
+                Paid orders today
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- RECENT ORDERS -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+
+            <div>
+                <p class="eyebrow">
+                    ACTIVITY
+                </p>
+
+                <h2>
+                    Recent Orders
+                </h2>
+            </div>
+
+            <a
+                href="{{ url_for('admin_orders') }}"
+                class="secondary-button"
+            >
+                View All
+            </a>
+
+        </div>
+
+
+        {% if recent_orders %}
+
+            <div class="recent-orders">
+
+                {% for order in recent_orders %}
+
+                    <a
+                        href="{{ url_for(
+                            'admin_order_detail',
+                            order_id=order['id']
+                        ) }}"
+                        class="recent-order"
+                    >
+
+                        <div class="recent-order-main">
+
+                            <strong>
+                                #{{ order["id"] }}
+                            </strong>
+
+                            <div>
+                                <strong>
+                                    {{ order["customer_name"] }}
+                                </strong>
+
+                                <span>
+                                    {{ order["created_at"] }}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="recent-order-right">
+
+                            <strong>
+                                {{ order["total"] }} MMK
+                            </strong>
+
+
+                            {% if order["status"] == "confirmed" %}
+
+                                <span class="status-badge confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif order["status"] == "preparing" %}
+
+                                <span class="status-badge preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order["status"] == "ready" %}
+
+                                <span class="status-badge ready">
+                                    Ready
+                                </span>
+
+                            {% elif order["status"] == "completed" %}
+
+                                <span class="status-badge completed">
+                                    Completed
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge pending">
+                                    {{ order["status"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h2>No orders yet</h2>
+
+                <p>
+                    New customer orders will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- MANAGEMENT -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+
+            <div>
+                <p class="eyebrow">
+                    MANAGEMENT
+                </p>
+
+                <h2>
+                    Restaurant
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="admin-grid">
+
+            <a
+                href="{{ url_for('admin_orders') }}"
+                class="admin-card"
+            >
+
+                <span class="admin-card-icon">
+                    📦
+                </span>
+
+                <h2>
+                    Orders
+                </h2>
+
+                <p>
+                    View incoming orders and update
+                    their status.
+                </p>
+
+                <span class="admin-card-link">
+                    Manage Orders →
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('admin_foods') }}"
+                class="admin-card"
+            >
+
+                <span class="admin-card-icon">
+                    🍜
+                </span>
+
+                <h2>
+                    Menu
+                </h2>
+
+                <p>
+                    Add, edit, and manage your
+                    restaurant's food.
+                </p>
+
+                <span class="admin-card-link">
+                    Manage Menu →
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('admin_categories') }}"
+                class="admin-card"
+            >
+
+                <span class="admin-card-icon">
+                    ☷
+                </span>
+
+                <h2>
+                    Categories
+                </h2>
+
+                <p>
+                    Organize your menu into
+                    categories.
+                </p>
+
+                <span class="admin-card-link">
+                    Manage Categories →
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

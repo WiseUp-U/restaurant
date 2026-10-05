@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Category
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">MENU MANAGEMENT</p>
+            <h1>Add Category</h1>
+            <p>Create a new category for your menu.</p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_categories') }}"
+            class="secondary-button"
+        >
+            ← Back to Categories
+        </a>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="form-error-box">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form
+        method="POST"
+        class="admin-form"
+    >
+
+        <input 
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}"
+        >
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+
+                <h2>Category Information</h2>
+
+                <p>
+                    Give your category a clear name.
+                </p>
+
+            </div>
+
+
+            <div class="form-card-content">
+
+                <div class="form-field">
+
+                    <label for="name">
+                        Category Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="e.g. Main Dishes"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="form-actions">
+
+            <a
+                href="{{ url_for('admin_categories') }}"
+                class="secondary-button"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Add Category
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

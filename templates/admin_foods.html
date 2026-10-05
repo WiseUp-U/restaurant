@@ -1,0 +1,212 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Menu Management
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">ADMIN</p>
+            <h1>Menu Management</h1>
+            <p>
+                Add and manage the food available to customers.
+            </p>
+        </div>
+
+        <div class="admin-header-actions">
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="secondary-button"
+            >
+                ← Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('admin_add_food') }}"
+                class="button"
+            >
+                + Add Food
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if not foods %}
+
+        <div class="empty-state">
+
+            <h2>No foods yet</h2>
+
+            <p>
+                Add your first menu item.
+            </p>
+
+            <a
+                href="{{ url_for('admin_add_food') }}"
+                class="button"
+            >
+                Add Food
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-food-grid">
+
+            {% for food in foods %}
+
+                <article class="admin-food-card">
+
+                    {% if food["image"] %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + food['image']
+                            ) }}"
+                            alt="{{ food['name'] }}"
+                            class="admin-food-image"
+                        >
+
+                    {% else %}
+
+                        <div class="admin-food-placeholder">
+                            No image
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="admin-food-content">
+
+                        <div class="admin-food-title">
+
+                            <div>
+                                <span class="food-category">
+                                    {{ food["category_name"] }}
+                                </span>
+
+                                <h2>
+                                    {{ food["name"] }}
+                                </h2>
+                            </div>
+
+
+                            {% if food["available"] %}
+
+                                <span class="availability-badge available">
+                                    Available
+                                </span>
+
+                            {% else %}
+
+                                <span class="availability-badge unavailable-badge">
+                                    Unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if food["description"] %}
+
+                            <p class="admin-food-description">
+                                {{ food["description"] }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <div class="admin-food-price">
+                            {{ food["price"] }} MMK
+                        </div>
+
+
+                        <div class="admin-food-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'admin_edit_food',
+                                    food_id=food['id']
+                                ) }}"
+                                class="secondary-button"
+                            >
+                                Edit
+                            </a>
+
+
+                            {% if food["available"] %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'admin_toggle_food',
+                                        food_id=food['id']
+                                    ) }}"
+                                >
+
+                                    <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token () }}"
+                                    >
+                                    <button
+                                        type="submit"
+                                        class="danger-button"
+                                    >
+                                        Make Unavailable
+                                    </button>
+
+                                </form>
+
+                            {% else %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'admin_toggle_food',
+                                        food_id=food['id']
+                                    ) }}"
+                                >
+                                    <input 
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                    >
+                                    
+                                    <button
+                                        type="submit"
+                                        class="available-button"
+                                    >
+                                        Make Available
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Track Order
+{% endblock %}
+
+{% block body %}
+
+<div class="tracking-page">
+
+    <div class="page-heading">
+        <p class="eyebrow">ORDER TRACKING</p>
+
+        <h1>Track Your Order</h1>
+
+        <p>
+            Enter the tracking code you received after payment.
+        </p>
+    </div>
+
+
+    {% if not order %}
+
+        <form
+            method="POST"
+            action="{{ url_for('track') }}"
+            class="tracking-form"
+        >
+
+            <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+            >
+
+
+            <label for="tracking_code">
+                Tracking Code
+            </label>
+
+            <input
+                type="text"
+                id="tracking_code"
+                name="tracking_code"
+                placeholder="Example: A1B2C3D4"
+                autocomplete="off"
+                required
+            >
+
+            {% if error %}
+                <p class="form-error">
+                    {{ error }}
+                </p>
+            {% endif %}
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Track Order
+            </button>
+
+        </form>
+
+
+    {% else %}
+
+        <div class="order-tracking-card">
+
+            <div class="tracking-top">
+
+                <div>
+                    <span class="tracking-label">
+                        Order
+                    </span>
+
+                    <h2>
+                        #{{ order["id"] }}
+                    </h2>
+                </div>
+
+                <div class="tracking-status">
+                    {{ order["status"] }}
+                </div>
+
+            </div>
+
+
+            <div class="tracking-details">
+
+                <div>
+                    <span>Tracking Code</span>
+                    <strong>
+                        {{ order["tracking_code"] }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Payment</span>
+                    <strong>
+                        {{ order["payment_status"] }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Placed</span>
+                    <strong>
+                        {{ order["created_at"] }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <h3>Items</h3>
+
+            <div class="tracked-items">
+
+                {% for item in items %}
+
+                    <div class="tracked-item">
+
+                        <span>
+                            {{ item["name"] }}
+                            × {{ item["quantity"] }}
+                        </span>
+
+                        <strong>
+                            {{ item["price"] *
+                               item["quantity"] }}
+                            MMK
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="tracked-total">
+
+                <span>Total</span>
+
+                <strong>
+                    {{ order["total"] }} MMK
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="tracking-again">
+
+            <a
+                href="{{ url_for('track') }}"
+                class="secondary-button"
+            >
+                Track Another Order
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

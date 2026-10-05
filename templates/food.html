@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ food["name"] }}
+{% endblock %}
+
+{% block body %}
+
+<div class="food-detail">
+
+    <a
+        href="{{ url_for('menu') }}"
+        class="back-link"
+    >
+        ← Back to Menu
+    </a>
+
+
+    <div class="food-detail-card">
+
+        <div class="food-detail-image">
+
+            {% if food["image"] %}
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/' + food['image']
+                    ) }}"
+                    alt="{{ food['name'] }}"
+                >
+
+            {% else %}
+
+                <div class="food-detail-placeholder">
+                    No image
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="food-detail-info">
+
+            <p class="eyebrow">
+                {{ food["category_name"] }}
+            </p>
+
+            <h1>
+                {{ food["name"] }}
+            </h1>
+
+            {% if food["description"] %}
+                <p class="food-detail-description">
+                    {{ food["description"] }}
+                </p>
+            {% endif %}
+
+            <p class="food-detail-price">
+                {{ food["price"] }} MMK
+            </p>
+
+
+            {% if food["available"] %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for('add_to_cart', id=food['id']) }}"
+                    class="add-to-cart-form"
+                >
+
+                    <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                    >
+
+                    <label for="quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        max="10"
+                    >
+
+                    <button
+                        type="submit"
+                        class="button add-button"
+                    >
+                        Add to Cart
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <p class="unavailable">
+                    Currently unavailable
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

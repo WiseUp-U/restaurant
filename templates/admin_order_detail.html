@@ -1,0 +1,203 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Order #{{ order["id"] }}
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">ORDER DETAILS</p>
+            <h1>Order #{{ order["id"] }}</h1>
+        </div>
+
+        <a
+            href="{{ url_for('admin_orders') }}"
+            class="secondary-button"
+        >
+            ← Back to Orders
+        </a>
+
+    </div>
+
+
+    <div class="order-detail-grid">
+
+        <!-- CUSTOMER -->
+
+        <section class="detail-card">
+
+            <div class="detail-card-header">
+                <h2>Customer</h2>
+            </div>
+
+            <div class="detail-content">
+
+                <div class="detail-row">
+                    <span>Name</span>
+                    <strong>
+                        {{ order["customer_name"] }}
+                    </strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Phone</span>
+                    <strong>
+                        {{ order["phone"] }}
+                    </strong>
+                </div>
+
+                <div class="detail-row address-row">
+                    <span>Delivery Address</span>
+                    <strong>
+                        {{ order["address"] }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDER STATUS -->
+
+        <section class="detail-card">
+
+            <div class="detail-card-header">
+                <h2>Order Status</h2>
+            </div>
+
+            <div class="detail-content">
+
+                <div class="detail-row">
+                    <span>Status</span>
+
+                    <span class="status-badge {{ order['status'] }}">
+                        {{ order["status"] }}
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span>Payment</span>
+
+                    <span class="status-badge
+                        {% if order['payment_status'] == 'paid' %}
+                            completed
+                        {% else %}
+                            pending
+                        {% endif %}
+                    ">
+                        {{ order["payment_status"] }}
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span>Tracking Code</span>
+
+                    <strong>
+                        {{ order["tracking_code"] }}
+                    </strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Created</span>
+
+                    <strong>
+                        {{ order["created_at"] }}
+                    </strong>
+                </div>
+
+                {% if order["payment_id"] %}
+
+                    <div class="detail-row">
+                        <span>Payment ID</span>
+
+                        <strong class="break-text">
+                            {{ order["payment_id"] }}
+                        </strong>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDER ITEMS -->
+
+        <section class="detail-card detail-card-wide">
+
+            <div class="detail-card-header">
+                <h2>Order Items</h2>
+            </div>
+
+            <div class="detail-content">
+
+                {% for item in items %}
+
+                    <div class="detail-item">
+
+                        <div>
+
+                            <strong>
+                                {{ item["name"] }}
+                            </strong>
+
+                            <span>
+                                {{ item["quantity"] }}
+                                ×
+                                {{ item["price"] }} MMK
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            {{ item["price"] *
+                               item["quantity"] }}
+                            MMK
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <div class="order-summary-detail">
+
+                    <div>
+                        <span>Subtotal</span>
+                        <span>
+                            {{ order["subtotal"] }} MMK
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>Delivery</span>
+                        <span>
+                            {{ order["delivery_fee"] }} MMK
+                        </span>
+                    </div>
+
+                    <div class="detail-total">
+                        <strong>Total</strong>
+                        <strong>
+                            {{ order["total"] }} MMK
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}

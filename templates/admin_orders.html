@@ -1,0 +1,272 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Orders
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">ADMIN</p>
+            <h1>Orders</h1>
+            <p>
+                Manage incoming restaurant orders.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="secondary-button"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    {% if not orders %}
+
+        <div class="empty-state">
+
+            <h2>No orders yet</h2>
+
+            <p>
+                New customer orders will appear here.
+            </p>
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-orders">
+
+            {% for order in orders %}
+
+                <article class="admin-order-card">
+
+                    <div class="admin-order-top">
+
+                        <div>
+
+                            <span class="order-number">
+                                Order #{{ order["id"] }}
+                            </span>
+
+                            <h2>
+                                <a
+                                    href="{{ url_for(
+                                        'admin_order_detail',
+                                        order_id=order['id']
+                                    ) }}"
+                                >
+                                    {{ order["customer_name"] }}
+                                </a>
+                            </h2>
+
+                        </div>
+
+
+                        <div class="admin-order-status">
+
+                            {% if order["status"] == "confirmed" %}
+
+                                <span class="status-badge confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif order["status"] == "preparing" %}
+
+                                <span class="status-badge preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order["status"] == "ready" %}
+
+                                <span class="status-badge ready">
+                                    Ready
+                                </span>
+
+                            {% elif order["status"] == "completed" %}
+
+                                <span class="status-badge completed">
+                                    Completed
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge pending">
+                                    {{ order["status"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-order-info">
+
+                        <div>
+                            <span>Phone</span>
+                            <strong>
+                                {{ order["phone"] }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Tracking</span>
+                            <strong>
+                                {{ order["tracking_code"] }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Payment</span>
+                            <strong>
+                                {{ order["payment_status"] }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Total</span>
+                            <strong>
+                                {{ order["total"] }} MMK
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-order-bottom">
+
+                        <span class="order-date">
+                            {{ order["created_at"] }}
+                        </span>
+
+
+                        <div class="order-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'admin_order_detail',
+                                    order_id=order['id']
+                                ) }}"
+                                class="secondary-button"
+                            >
+                                View Details
+                            </a>
+
+
+                            {% if order["status"] == "confirmed" %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'admin_update_order_status',
+                                        order_id=order['id']
+                                    ) }}"
+                                >
+                                    <input 
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                    >
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="preparing"
+                                    >
+
+                                    <button type="submit">
+                                        Start Preparing
+                                    </button>
+
+                                </form>
+
+
+                            {% elif order["status"] == "preparing" %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'admin_update_order_status',
+                                        order_id=order['id']
+                                    ) }}"
+                                >
+                                    
+                                    <input 
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                    >
+                                        
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="ready"
+                                    >
+
+                                    <button type="submit">
+                                        Mark Ready
+                                    </button>
+
+                                </form>
+
+
+                            {% elif order["status"] == "ready" %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'admin_update_order_status',
+                                        order_id=order['id']
+                                    ) }}"
+                                >
+                                    
+                                    <input 
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="{{ csrf_token() }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="completed"
+                                    >
+
+                                    <button type="submit">
+                                        Complete Order
+                                    </button>
+
+                                </form>
+
+
+                            {% elif order["status"] == "completed" %}
+
+                                <span class="completed-label">
+                                    ✓ Completed
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

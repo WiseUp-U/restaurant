@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Payment
+{% endblock %}
+
+{% block body %}
+
+<div class="payment-page">
+
+    <div class="payment-header">
+        <p class="eyebrow">PAYMENT</p>
+
+        <h1>Complete Your Payment</h1>
+
+        <p>
+            Your order has been created.
+            Complete payment to confirm it.
+        </p>
+    </div>
+
+
+    <div class="payment-card">
+
+        <div class="payment-order">
+
+            <span class="payment-label">
+                Order
+            </span>
+
+            <strong>
+                #{{ order["id"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="payment-total">
+
+            <span>Total</span>
+
+            <strong>
+                {{ order["total"] }} MMK
+            </strong>
+
+        </div>
+
+
+        <div class="payment-status">
+
+            <span>Status</span>
+
+            <span class="status-badge pending">
+                Payment Pending
+            </span>
+
+        </div>
+
+
+        <hr>
+
+
+        <div class="payment-method">
+
+            <h2>KBZPay</h2>
+
+            <p>
+                In the real version, this section will connect
+                to the official KBZPay payment process.
+            </p>
+
+            <div class="payment-placeholder">
+                KBZPay
+            </div>
+
+        </div>
+
+
+        <!-- DEVELOPMENT ONLY -->
+
+        <form
+            method="POST"
+            action="{{ url_for(
+                'simulate_payment',
+                tracking_code=order['tracking_code']
+            ) }}"
+        >
+
+            <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+            >
+
+            <button
+                type="submit"
+                class="button payment-button"
+            >
+                Simulate Successful Payment
+            </button>
+
+        </form>
+
+
+        <p class="payment-note">
+            Development testing only.
+            This button does not process real money.
+        </p>
+
+    </div>
+
+
+    <div class="payment-help">
+
+        <p>
+            After successful payment, your order will be confirmed
+            and you'll receive a tracking code.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

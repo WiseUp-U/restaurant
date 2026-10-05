@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Category Management
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="eyebrow">MENU MANAGEMENT</p>
+            <h1>Categories</h1>
+            <p>Organize your menu into categories.</p>
+        </div>
+
+        <div class="admin-header-actions">
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="secondary-button"
+            >
+                ← Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('admin_add_category') }}"
+                class="button"
+            >
+                + Add Category
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if not categories %}
+
+        <div class="empty-state">
+
+            <h2>No categories yet</h2>
+
+            <p>
+                Create a category before adding food.
+            </p>
+
+            <a
+                href="{{ url_for('admin_add_category') }}"
+                class="button"
+            >
+                Add Category
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="category-list">
+
+            {% for category in categories %}
+
+                <article class="category-card">
+
+                    <div class="category-card-icon">
+                        ☷
+                    </div>
+
+                    <div class="category-card-content">
+
+                        <h2>
+                            {{ category["name"] }}
+                        </h2>
+
+                        <span>
+                            Category #{{ category["id"] }}
+                        </span>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

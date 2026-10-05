@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{% block title %}My Restaurant{% endblock %}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='styles.css') }}"
+    >
+
+    {% block extra %}{% endblock %}
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+
+            <a
+                href="{{ url_for('menu') }}"
+                class="logo"
+            >
+                My Restaurant
+            </a>
+
+            <nav class="main-nav">
+                <a href="{{ url_for('menu') }}">
+                    Menu
+                </a>
+
+                <a href="{{ url_for('cart') }}">
+                    Cart
+                </a>
+
+                <a href="{{ url_for('track') }}">
+                    Track Order
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main class="main-content">
+
+        {% block body %}{% endblock %}
+
+    </main>
+
+</body>
+</html>

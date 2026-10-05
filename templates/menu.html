@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Menu
+{% endblock %}
+
+{% block body %}
+
+<section class="menu-header">
+    <p class="eyebrow">OUR MENU</p>
+    <h1>Good food, simply made.</h1>
+    <p>
+        Choose something you like and add it to your order.
+    </p>
+</section>
+
+
+{% if categories %}
+
+    {% for category in categories %}
+
+        <section class="menu-section">
+
+            <div class="section-heading">
+                <h2>{{ category["name"] }}</h2>
+            </div>
+
+
+            <div class="food-grid">
+
+                {% for food in foods if food["category_id"] == category["id"] %}
+
+                    <article class="food-card">
+
+                        {% if food["image"] %}
+                            <div class="food-image-wrapper">
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='images/' + food['image']
+                                    ) }}"
+                                    alt="{{ food['name'] }}"
+                                    class="food-image"
+                                >
+                            </div>
+                        {% else %}
+                            <div class="food-image-placeholder">
+                                No image
+                            </div>
+                        {% endif %}
+
+
+                        <div class="food-card-content">
+
+                            <h3>
+                                {{ food["name"] }}
+                            </h3>
+
+                            {% if food["description"] %}
+                                <p class="food-description">
+                                    {{ food["description"] }}
+                                </p>
+                            {% endif %}
+
+                            <div class="food-card-bottom">
+
+                                <span class="food-price">
+                                    {{ food["price"] }} MMK
+                                </span>
+
+                                <a
+                                    href="{{ url_for(
+                                        'food',
+                                        id=food['id']
+                                    ) }}"
+                                    class="button"
+                                >
+                                    View
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No menu items available.</p>
+
+{% endif %}
+
+{% endblock %}
